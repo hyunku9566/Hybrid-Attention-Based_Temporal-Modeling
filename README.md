@@ -105,7 +105,7 @@ baseline-adl-recognition/
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/baseline-adl-recognition.git
+git clone https://github.com/hyunku9566/Hybrid-Attention-Based_Temporal-Modeling.git
 cd baseline-adl-recognition
 
 # Create virtual environment

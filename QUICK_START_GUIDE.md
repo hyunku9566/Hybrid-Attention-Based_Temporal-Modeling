@@ -5,7 +5,7 @@
 ### 1️⃣ 데이터 준비 (10초)
 
 ```bash
-cd /home/lee/research-hub/hyunku/iot/baseline-adl-recognition
+cd ~/baseline-adl-recognition
 ./setup_data.sh
 ```
 
