@@ -259,3 +259,4 @@ python evaluate/visualize.py \
 
 Example: Hand washing activity shows high attention on water sensor activation/deactivation.
 # Hybrid-Attention-Based_Temporal-Modeling
+# Hybrid-Attention-Based_Temporal-Modeling
