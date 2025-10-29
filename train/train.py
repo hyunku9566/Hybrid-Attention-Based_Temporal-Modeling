@@ -17,8 +17,8 @@ from torch.optim.lr_scheduler import CosineAnnealingWarmRestarts
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models import BaselineModel, FocalLoss
-from train.config import TrainingConfig
-from train.utils import (
+from config import TrainingConfig
+from utils import (
     load_data, create_dataloaders, compute_class_weights,
     train_epoch, evaluate, save_checkpoint, 
     plot_training_history, plot_confusion_matrix, save_results
@@ -32,7 +32,7 @@ def parse_args():
     # Data
     parser.add_argument('--data_path', type=str, default='../data/processed/dataset.npz',
                        help='Path to preprocessed dataset')
-    parser.add_argument('--checkpoint_dir', type=str, default='../checkpoints',
+    parser.add_argument('--checkpoint_dir', type=str, default='checkpoints',
                        help='Directory to save checkpoints')
     
     # Model
@@ -123,13 +123,9 @@ def main():
     # Create model
     print("🏗️  Building model...")
     model = BaselineModel(
-        input_dim=114,
-        hidden_dim=args.hidden_dim,
-        n_classes=len(class_names),
-        n_tcn_blocks=args.n_tcn_blocks,
-        kernel_size=3,
-        dilations=[1, 2, 4] if args.n_tcn_blocks == 3 else [1, 2, 4, 8],
-        dropout=args.dropout
+        in_dim=114,
+        hidden=args.hidden_dim,
+        classes=len(class_names)
     ).to(device)
     
     n_params = model.count_parameters()
@@ -142,8 +138,8 @@ def main():
     print(f"Class weights: {class_weights.cpu().numpy()}")
     
     criterion = FocalLoss(
-        alpha=class_weights,
-        gamma=args.focal_gamma
+        gamma=args.focal_gamma,
+        weight=class_weights
     )
     print(f"Loss: Focal Loss (gamma={args.focal_gamma})")
     print()
@@ -223,7 +219,7 @@ def main():
     # Load best model for evaluation
     print("📊 Evaluating best model on test set...")
     checkpoint_path = os.path.join(args.checkpoint_dir, 'best_baseline.pt')
-    checkpoint = torch.load(checkpoint_path, map_location=device)
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
     model.load_state_dict(checkpoint['model_state_dict'])
     
     # Evaluate on test set

@@ -1,0 +1,15 @@
+{
+  "test_accuracy": 0.7871287128712872,
+  "test_loss": 0.16617475692992625,
+  "macro_f1": 0.7484676545416139,
+  "best_val_acc": 0.7610619469026548,
+  "n_params": 575110,
+  "config": {
+    "hidden_dim": 128,
+    "n_tcn_blocks": 3,
+    "dropout": 0.3,
+    "batch_size": 64,
+    "lr": 0.0003,
+    "focal_gamma": 2.0
+  }
+}

@@ -17,8 +17,8 @@ from sklearn.metrics import (
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from models import BaselineModel
-from train.utils import load_data, create_dataloaders, evaluate, FocalLoss
+from models import BaselineModel, FocalLoss
+from train.utils import load_data, create_dataloaders, evaluate
 from train.config import TrainingConfig
 
 
@@ -112,16 +112,12 @@ def main():
     # Load model
     print("🔧 Loading model...")
     model = BaselineModel(
-        input_dim=114,
-        hidden_dim=TrainingConfig.HIDDEN_DIM,
-        n_classes=len(class_names),
-        n_tcn_blocks=TrainingConfig.N_TCN_BLOCKS,
-        kernel_size=3,
-        dilations=TrainingConfig.DILATIONS,
-        dropout=TrainingConfig.DROPOUT
+        in_dim=114,
+        hidden=TrainingConfig.HIDDEN_DIM,
+        classes=len(class_names)
     ).to(device)
     
-    checkpoint = torch.load(args.checkpoint, map_location=device)
+    checkpoint = torch.load(args.checkpoint, map_location=device, weights_only=False)
     model.load_state_dict(checkpoint['model_state_dict'])
     
     n_params = model.count_parameters()
