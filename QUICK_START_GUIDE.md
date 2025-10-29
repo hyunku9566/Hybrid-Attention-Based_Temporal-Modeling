@@ -14,17 +14,21 @@ cd /home/lee/research-hub/hyunku/iot/baseline-adl-recognition
 - **5개 클래스** (t1~t5: 요리, 손씻기, 수면, 약먹기, 식사)
 - **이미 전처리 완료!**
 
-### 2️⃣ 모델 학습 (10초 설정)
+### 2️⃣ 모델 학습 (15분 설정)
 
 ```bash
 python train/train.py \
   --data_path data/processed/dataset_with_lengths_v3.npz \
-  --epochs 30 \
-  --batch_size 64 \
-  --lr 3e-4
+  --epochs 50 \
+  --batch_size 32 \
+  --lr 3e-4 \
+  --dropout 0.1 \
+  --hidden_dim 256 \
+  --focal_gamma 1.5 \
+  --patience 15
 ```
 
-⏱️ 예상 학습 시간: ~10분 (GPU) / ~30분 (CPU)
+⏱️ 예상 학습 시간: ~15분 (GPU) / ~45분 (CPU)
 
 ### 3️⃣ 모델 평가 (5초)
 
@@ -50,14 +54,14 @@ python evaluate/visualize.py \
 학습이 성공적으로 완료되면:
 
 ```
-✅ Test Accuracy: 93.7%
-✅ Macro F1: 0.924
+✅ Test Accuracy: 95.4%
+✅ Macro F1: 0.947
 ✅ Per-class F1:
-   - t1 (cooking):      0.882
-   - t2 (hand washing): 0.956 ⭐
-   - t3 (sleeping):     0.988
-   - t4 (medicine):     0.874
-   - t5 (eating):       0.921
+   - t1 (cooking):      0.936
+   - t2 (hand washing): 0.972 ⭐
+   - t3 (sleeping):     0.986
+   - t4 (medicine):     0.919
+   - t5 (eating):       0.920
 ```
 
 ---
@@ -65,14 +69,14 @@ python evaluate/visualize.py \
 ## 🎯 전체 워크플로우 (한 번에 실행)
 
 ```bash
-# 모든 단계를 한 번에 실행
+# 모든 단계를 한 번에 실행 (최적 설정)
 cd scripts
 ./quick_start.sh
 ```
 
 이 스크립트는:
 1. ✅ 데이터 준비 확인
-2. 🏋️ 모델 학습 (30 epochs)
+2. 🏋️ 모델 학습 (50 epochs, 최적 하이퍼파라미터)
 3. 📊 테스트 세트 평가
 4. 🎨 어텐션 가중치 시각화
 
@@ -104,22 +108,21 @@ results/
 ### 학습 설정 변경
 
 ```bash
+# 최적 설정 (권장)
+python train/train.py \
+  --data_path data/processed/dataset_with_lengths_v3.npz \
+  --epochs 50 --batch_size 32 --lr 3e-4 \
+  --dropout 0.1 --hidden_dim 256 --focal_gamma 1.5 --patience 15
+
 # 더 긴 학습
 python train/train.py \
   --data_path data/processed/dataset_with_lengths_v3.npz \
-  --epochs 50 \
-  --patience 10
-
-# 더 큰 배치
-python train/train.py \
-  --data_path data/processed/dataset_with_lengths_v3.npz \
-  --batch_size 128
+  --epochs 100 --patience 20
 
 # 더 큰 모델
 python train/train.py \
   --data_path data/processed/dataset_with_lengths_v3.npz \
-  --hidden_dim 256 \
-  --n_tcn_blocks 4
+  --hidden_dim 512 --dropout 0.05
 ```
 
 ### 새 데이터셋 생성

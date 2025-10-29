@@ -1,15 +1,15 @@
 {
-  "test_accuracy": 0.7871287128712872,
-  "test_loss": 0.16617475692992625,
-  "macro_f1": 0.7484676545416139,
-  "best_val_acc": 0.7610619469026548,
-  "n_params": 575110,
+  "test_accuracy": 0.954031117397454,
+  "test_loss": 0.04295324818813242,
+  "macro_f1": 0.9467953954493387,
+  "best_val_acc": 0.9495575221238938,
+  "n_params": 2264326,
   "config": {
-    "hidden_dim": 128,
+    "hidden_dim": 256,
     "n_tcn_blocks": 3,
-    "dropout": 0.3,
-    "batch_size": 64,
+    "dropout": 0.1,
+    "batch_size": 32,
     "lr": 0.0003,
-    "focal_gamma": 2.0
+    "focal_gamma": 1.5
   }
 }

@@ -183,16 +183,13 @@ def main():
     # Load model
     print("🔧 Loading model...")
     model = BaselineModel(
-        input_dim=114,
-        hidden_dim=TrainingConfig.HIDDEN_DIM,
-        n_classes=len(class_names),
-        n_tcn_blocks=TrainingConfig.N_TCN_BLOCKS,
-        kernel_size=3,
-        dilations=TrainingConfig.DILATIONS,
-        dropout=TrainingConfig.DROPOUT
+        in_dim=114,
+        hidden=256,
+        classes=len(class_names),
+        dropout=0.1
     ).to(device)
     
-    checkpoint = torch.load(args.checkpoint, map_location=device)
+    checkpoint = torch.load(args.checkpoint, map_location=device, weights_only=False)
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
     print("✅ Model loaded")

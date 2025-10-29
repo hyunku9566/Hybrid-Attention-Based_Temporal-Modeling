@@ -40,7 +40,7 @@ def parse_args():
                        help='Hidden dimension')
     parser.add_argument('--n_tcn_blocks', type=int, default=3,
                        help='Number of TCN blocks')
-    parser.add_argument('--dropout', type=float, default=0.3,
+    parser.add_argument('--dropout', type=float, default=0.2,
                        help='Dropout rate')
     
     # Training
@@ -48,11 +48,11 @@ def parse_args():
                        help='Batch size')
     parser.add_argument('--lr', type=float, default=3e-4,
                        help='Learning rate')
-    parser.add_argument('--epochs', type=int, default=30,
+    parser.add_argument('--epochs', type=int, default=50,
                        help='Number of epochs')
-    parser.add_argument('--patience', type=int, default=7,
+    parser.add_argument('--patience', type=int, default=15,
                        help='Early stopping patience')
-    parser.add_argument('--focal_gamma', type=float, default=2.0,
+    parser.add_argument('--focal_gamma', type=float, default=1.5,
                        help='Focal loss gamma')
     parser.add_argument('--use_weighted_sampler', action='store_true', default=True,
                        help='Use weighted random sampler')
@@ -125,7 +125,8 @@ def main():
     model = BaselineModel(
         in_dim=114,
         hidden=args.hidden_dim,
-        classes=len(class_names)
+        classes=len(class_names),
+        dropout=args.dropout
     ).to(device)
     
     n_params = model.count_parameters()

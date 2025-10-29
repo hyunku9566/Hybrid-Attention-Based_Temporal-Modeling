@@ -91,7 +91,10 @@ baseline-adl-recognition/
 │   └── best_baseline.pt       # Best model checkpoint
 ├── docs/                       # Documentation
 │   ├── PAPER.md               # Full paper draft
-│   └── EXPERIMENTS.md         # Ablation studies
+│   ├── EXPERIMENTS.md         # Ablation studies
+│   ├── HYPERPARAMETER_TUNING.md # Comprehensive tuning results
+│   ├── DATA_SETUP.md          # Data preparation guide
+│   └── PREPROCESSING_PIPELINE.md # Preprocessing details
 ├── requirements.txt            # Python dependencies
 └── README.md                   # This file
 ```
@@ -146,15 +149,17 @@ python data/build_features.py \
 ### Training
 
 ```bash
-# Train with existing preprocessed dataset (fastest)
+# Train with optimal hyperparameters (95.40% accuracy)
 python train/train.py \
     --data_path data/processed/dataset_with_lengths_v3.npz \
-    --epochs 30 --batch_size 64 --lr 3e-4
+    --epochs 50 --batch_size 32 --lr 3e-4 \
+    --dropout 0.1 --hidden_dim 256 --focal_gamma 1.5 --patience 15
 
 # Or train with your custom dataset
 python train/train.py \
     --data_path data/processed/dataset.npz \
-    --epochs 30 --batch_size 64 --lr 3e-4
+    --epochs 50 --batch_size 32 --lr 3e-4 \
+    --dropout 0.1 --hidden_dim 256 --focal_gamma 1.5 --patience 15
 ```
 
 ### Evaluation
@@ -173,9 +178,9 @@ python evaluate/evaluate.py \
 import torch
 from models.baseline_model import BaselineModel
 
-# Load model
-model = BaselineModel(in_dim=114, hidden=128, classes=5)
-model.load_state_dict(torch.load('checkpoints/best_baseline.pt'))
+# Load model with optimal configuration
+model = BaselineModel(in_dim=114, hidden=256, classes=5, dropout=0.1)
+model.load_state_dict(torch.load('checkpoints/best_baseline.pt', weights_only=False))
 model.eval()
 
 # Predict
@@ -225,24 +230,29 @@ We systematically tested 6 architectural variants:
 
 ## 📖 Hyperparameters
 
+### 🎯 Optimal Configuration (95.40% Accuracy)
+
 ```python
 # Model Architecture
 in_dim = 114           # Sensor features
-hidden = 128           # TCN/BiGRU hidden size
+hidden = 256           # TCN/BiGRU hidden size (increased from 128)
 tcn_blocks = 3         # Number of TCN blocks
 dilations = [1, 2, 4]  # Exponential dilation
 kernel_size = 3        # TCN kernel size
-dropout = 0.1          # TCN dropout (0.2 for classifier)
+dropout = 0.1          # TCN dropout (reduced from 0.2)
 
-# Training
-batch_size = 64
-learning_rate = 3e-4
-weight_decay = 1e-5
-epochs = 30
-patience = 10          # Early stopping
-loss = FocalLoss(gamma=2.0)  # Handles class imbalance
-optimizer = AdamW
+# Training (Optimized)
+batch_size = 32        # Reduced for more frequent updates
+learning_rate = 3e-4   # Initial learning rate
+weight_decay = 1e-4    # L2 regularization
+epochs = 50            # Increased training duration
+patience = 15          # Early stopping patience (increased)
+loss = FocalLoss(gamma=1.5)  # Reduced focusing (from 2.0)
+optimizer = AdamW      # With CosineAnnealingWarmRestarts
 ```
+
+### 📚 Detailed Tuning Results
+See **[docs/HYPERPARAMETER_TUNING.md](docs/HYPERPARAMETER_TUNING.md)** for comprehensive experimentation details, performance comparisons, and tuning insights.
 
 ## 📈 Visualization
 

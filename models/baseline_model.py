@@ -58,7 +58,7 @@ class BaselineModel(nn.Module):
         >>> print(logits.shape)  # torch.Size([32, 5])
     """
     
-    def __init__(self, in_dim=114, hidden=128, classes=5):
+    def __init__(self, in_dim=114, hidden=128, classes=5, dropout=0.2):
         super().__init__()
         
         # Feature projection: map input features to hidden dimension
@@ -68,9 +68,9 @@ class BaselineModel(nn.Module):
         # 3 blocks with exponentially increasing dilation
         # Receptive field: 13 timesteps
         self.tcn = nn.Sequential(
-            TCNBlock(hidden, hidden, kernel=3, dilation=1, dropout=0.1),
-            TCNBlock(hidden, hidden, kernel=3, dilation=2, dropout=0.1),
-            TCNBlock(hidden, hidden, kernel=3, dilation=4, dropout=0.1),
+            TCNBlock(hidden, hidden, kernel=3, dilation=1, dropout=dropout),
+            TCNBlock(hidden, hidden, kernel=3, dilation=2, dropout=dropout),
+            TCNBlock(hidden, hidden, kernel=3, dilation=4, dropout=dropout),
         )
         
         # Bidirectional GRU
@@ -94,7 +94,7 @@ class BaselineModel(nn.Module):
         self.head = nn.Sequential(
             nn.Linear(hidden * 2, hidden),
             nn.ReLU(),
-            nn.Dropout(0.2),
+            nn.Dropout(dropout),
             nn.Linear(hidden, classes)
         )
     

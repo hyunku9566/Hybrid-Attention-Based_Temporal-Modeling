@@ -114,7 +114,8 @@ def main():
     model = BaselineModel(
         in_dim=114,
         hidden=TrainingConfig.HIDDEN_DIM,
-        classes=len(class_names)
+        classes=len(class_names),
+        dropout=TrainingConfig.DROPOUT
     ).to(device)
     
     checkpoint = torch.load(args.checkpoint, map_location=device, weights_only=False)
