@@ -1,0 +1,27 @@
+{
+  "model": "conformer",
+  "hyperparameters": {
+    "model": "conformer",
+    "data_path": "data/processed/dataset_with_lengths_v3.npz",
+    "checkpoint_dir": "checkpoints_conformer",
+    "hidden_dim": 256,
+    "dropout": 0.1,
+    "batch_size": 32,
+    "epochs": 50,
+    "lr": 0.0003,
+    "gamma": 1.5,
+    "patience": 15,
+    "device": "cuda"
+  },
+  "num_parameters": 6154757,
+  "best_val_acc": 0.9292035398230089,
+  "test_acc": 0.9207920792079208,
+  "test_f1": 0.900943265882274,
+  "per_class_f1": {
+    "t1_cook": 0.8140161725067385,
+    "t2_handwash": 0.946236559139785,
+    "t3_sleep": 0.9853211009174312,
+    "t4_medicine": 0.8360655737704918,
+    "t5_eat": 0.9230769230769231
+  }
+}

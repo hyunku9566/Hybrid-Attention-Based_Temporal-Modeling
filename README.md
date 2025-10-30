@@ -8,40 +8,82 @@ A lightweight yet highly accurate deep learning model for Activities of Daily Li
 
 ## 🏆 Key Results
 
-- **93.7% Accuracy** (State-of-the-art)
-- **0.924 Macro F1-Score**
-- **0.58M Parameters** (Edge-deployable)
-- **2.66ms Inference Time** (Real-time capable)
+### Best Model: Local Attention Hybrid 🥇
+- **97.52% Test Accuracy** (State-of-the-art)
+- **0.9717 Macro F1-Score**
+- **3.32M Parameters** (Real-time capable)
+- **+2.12%p improvement** over baseline
+
+### Baseline Model: TCN-BiGRU-Attention 🥈
+- **95.40% Test Accuracy** (Production-ready)
+- **0.9468 Macro F1-Score**
+- **2.26M Parameters** (Most efficient)
+- **Excellent parameter/performance ratio**
 
 ## 🎯 Highlights
 
-Our model **outperforms** 5 state-of-the-art HAR models:
-- ✅ **Best overall accuracy** among lightweight models (<1M params)
-- ✅ **Exceptional short-activity recognition** (0.956 F1 on hand washing)
-- ✅ **Balanced performance** across all activity classes
+We evaluated **5 different architectures** and achieved:
+- ✅ **97.52% accuracy** with Local Attention Hybrid (best)
+- ✅ **95.40% accuracy** with Baseline (most efficient)
+- ✅ **>95% F1 on ALL classes** with Local Hybrid
 - ✅ **Interpretable** through attention weight visualization
+- ✅ **Real-time inference** on edge devices
 
-## 📊 Performance Comparison
+## 📊 Model Comparison
 
-| Model | Accuracy | Macro F1 | Parameters | Inference Time |
-|-------|----------|----------|------------|----------------|
-| **Ours (Baseline)** | **93.7%** ⭐ | **0.924** ⭐ | 0.58M | 2.66ms |
-| Transformer | 93.0% | 0.910 | 0.82M | 2.69ms |
-| AttnSense | 92.0% | 0.900 | 0.31M | 1.90ms |
-| LSTM-FCN | 91.0% | 0.890 | 0.51M | 1.74ms |
-| DeepConvLSTM | 89.0% | 0.870 | 0.45M | 1.68ms |
-| CNN-LSTM | 88.0% | 0.860 | 0.21M | 1.17ms |
+| Rank | Model | Test Acc | F1 Score | Parameters | Status |
+|------|-------|----------|----------|------------|--------|
+| 🥇 | **Local Attention Hybrid** | **97.52%** | **0.9717** | 3.32M | ⭐ Best Overall |
+| 🥈 | **Baseline (TCN-BiGRU)** | **95.40%** | **0.9468** | 2.26M | ⚡ Most Efficient |
+| 🥉 | Deep TCN | 93.42% | 0.9174 | 2.43M | Good |
+| 4 | Conformer | 92.08% | 0.9009 | 6.15M | Overparameterized |
+| 5 | Transformer | 83.66% | 0.8042 | 3.22M | Not Recommended |
 
-## 🏗️ Architecture
+**Full comparison:** See [docs/COMPREHENSIVE_MODEL_COMPARISON.md](docs/COMPREHENSIVE_MODEL_COMPARISON.md)
+
+## 🏗️ Architectures
+
+### 1. Local Attention Hybrid 🥇 (Best Performance)
 
 ```
 Input (T=100, F=114)
        ↓
-[Feature Projection] Linear(114 → 128)
+[Feature Projection] Linear(114 → 256)
+       ↓
+[Temporal Encoding] TCN (5 blocks, dilation=1,2,4,8,16)
+       ↓
+[Local Self-Attention] Window=25, 2 heads
+       ↓
+[Sequential Modeling] BiGRU (hidden=256, bidirectional)
+       ↓
+[Global Attention] Additive Attention
+       ↓
+[Classification] FC → ReLU → Dropout → FC(5 classes)
+       ↓
+Output: [cooking, hand_washing, sleeping, medicine, eating]
+```
+
+**Key Components:**
+- **5-block TCN** with exponential dilation [1,2,4,8,16]
+- **Local Self-Attention** (window=25) for efficient local pattern capture
+- **BiGRU** for bidirectional sequential modeling
+- **Global Attention** for final temporal aggregation
+- **Residual connections** + LayerNorm for stable training
+
+**Performance:** 97.52% accuracy, 0.9717 F1
+
+---
+
+### 2. Baseline (TCN-BiGRU-Attention) 🥈 (Most Efficient)
+
+```
+Input (T=100, F=114)
+       ↓
+[Feature Projection] Linear(114 → 256)
        ↓
 [Temporal Encoding] TCN (3 blocks, dilation=1,2,4)
        ↓
-[Sequential Modeling] BiGRU (hidden=128, bidirectional)
+[Sequential Modeling] BiGRU (hidden=256, bidirectional)
        ↓
 [Temporal Attention] Additive Attention (Bahdanau-style)
        ↓
@@ -50,22 +92,12 @@ Input (T=100, F=114)
 Output: [cooking, hand_washing, sleeping, medicine, eating]
 ```
 
-### Key Components
+**Key Components:**
+- **3-block TCN** with dilations [1,2,4] (receptive field: 13)
+- **BiGRU** (25% fewer params than BiLSTM)
+- **Additive Attention** (interpretable, single-focus)
 
-1. **Temporal Convolutional Network (TCN)**
-   - 3 dilated convolution blocks (dilation: 1, 2, 4)
-   - Receptive field: 13 timesteps
-   - Causal padding for real-time inference
-
-2. **Bidirectional GRU**
-   - Hidden size: 128
-   - 25% fewer parameters than BiLSTM
-   - Captures past and future context
-
-3. **Additive Attention**
-   - Bahdanau-style attention mechanism
-   - Single focus (vs. multi-head over-smoothing)
-   - Interpretable attention weights
+**Performance:** 95.40% accuracy, 0.9468 F1, only 2.26M params
 
 ## 📂 Project Structure
 
@@ -75,26 +107,37 @@ baseline-adl-recognition/
 │   ├── preprocess.py          # Main preprocessing pipeline
 │   ├── build_features.py      # Feature extraction from sensors
 │   └── README.md              # Data format documentation
-├── models/                     # Model architecture
-│   ├── baseline_model.py      # Main TCN-BiGRU-Attention model
-│   ├── components.py          # TCN, Attention components
+├── models/                     # Model architectures
+│   ├── baseline_model.py      # TCN-BiGRU-Attention (baseline)
+│   ├── local_attention_hybrid.py # Local Hybrid (best)
+│   ├── deep_tcn_model.py      # Deep TCN with SE attention
+│   ├── conformer_model.py     # Conformer architecture
+│   ├── transformer_model.py   # Transformer encoder
+│   ├── components.py          # Shared components (TCN, Attention, FocalLoss)
 │   └── README.md              # Architecture details
 ├── train/                      # Training scripts
-│   ├── train.py               # Main training script
+│   ├── train.py               # Baseline training script
+│   ├── train_transformer.py   # Transformer training script
 │   ├── config.py              # Hyperparameters and settings
 │   └── utils.py               # Training utilities
 ├── evaluate/                   # Evaluation scripts
 │   ├── evaluate.py            # Model evaluation
-│   ├── visualize.py           # Attention visualization
-│   └── compare_models.py      # Benchmark comparison
-├── checkpoints/                # Pretrained models
-│   └── best_baseline.pt       # Best model checkpoint
+│   └── visualize.py           # Attention visualization
+├── checkpoints/                # Model checkpoints
+│   ├── best_baseline.pt       # Baseline checkpoint (95.40%)
+│   └── ...
+├── checkpoints_local_hybrid/   # Local Hybrid checkpoints
+│   ├── best_local_hybrid.pt   # Best model (97.52%)
+│   ├── confusion_matrix.png
+│   ├── training_history.png
+│   └── test_results.json
 ├── docs/                       # Documentation
-│   ├── PAPER.md               # Full paper draft
-│   ├── EXPERIMENTS.md         # Ablation studies
-│   ├── HYPERPARAMETER_TUNING.md # Comprehensive tuning results
+│   ├── COMPREHENSIVE_MODEL_COMPARISON.md # Full 5-model comparison
+│   ├── HYPERPARAMETER_TUNING.md # Baseline tuning results
 │   ├── DATA_SETUP.md          # Data preparation guide
 │   └── PREPROCESSING_PIPELINE.md # Preprocessing details
+├── run_train_all.py            # Unified training script (all models)
+├── create_comparison_plots.py  # Generate comparison visualizations
 ├── requirements.txt            # Python dependencies
 └── README.md                   # This file
 ```

@@ -1,0 +1,27 @@
+{
+  "model": "local_hybrid",
+  "hyperparameters": {
+    "model": "local_hybrid",
+    "data_path": "data/processed/dataset_with_lengths_v3.npz",
+    "checkpoint_dir": "checkpoints_local_hybrid",
+    "hidden_dim": 256,
+    "dropout": 0.1,
+    "batch_size": 32,
+    "epochs": 50,
+    "lr": 0.0003,
+    "gamma": 1.5,
+    "patience": 15,
+    "device": "cuda"
+  },
+  "num_parameters": 3315462,
+  "best_val_acc": 0.9672566371681416,
+  "test_acc": 0.9752475247524752,
+  "test_f1": 0.9716918869414632,
+  "per_class_f1": {
+    "t1_cook": 0.9655172413793104,
+    "t2_handwash": 0.9915966386554622,
+    "t3_sleep": 0.9926873857404022,
+    "t4_medicine": 0.9549902152641878,
+    "t5_eat": 0.9536679536679536
+  }
+}
