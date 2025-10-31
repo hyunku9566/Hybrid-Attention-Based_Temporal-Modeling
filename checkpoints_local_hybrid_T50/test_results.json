@@ -1,0 +1,27 @@
+{
+  "model": "local_hybrid",
+  "hyperparameters": {
+    "model": "local_hybrid",
+    "data_path": "data/processed/T_variants/dataset_T50.npz",
+    "checkpoint_dir": "checkpoints_local_hybrid_T50",
+    "hidden_dim": 256,
+    "dropout": 0.1,
+    "batch_size": 32,
+    "epochs": 50,
+    "lr": 0.0003,
+    "gamma": 1.5,
+    "patience": 15,
+    "device": "cuda"
+  },
+  "num_parameters": 3315462,
+  "best_val_acc": 0.8168141592920354,
+  "test_acc": 0.8224893917963225,
+  "test_f1": 0.7816311415939382,
+  "per_class_f1": {
+    "t1_cook": 0.8562691131498471,
+    "t2_handwash": 0.6142322097378277,
+    "t3_sleep": 0.9695290858725761,
+    "t4_medicine": 0.6906077348066298,
+    "t5_eat": 0.7775175644028103
+  }
+}

@@ -255,9 +255,17 @@ def main():
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False)
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=False)
     
+    # Get input dimension from data
+    input_dim = X.shape[2]
+    num_classes = len(class_names)
+    print(f"\n📊 Model configuration:")
+    print(f"   Input dim: {input_dim} (from dataset)")
+    print(f"   Classes: {num_classes}")
+    
     # Create model
     print(f"\n🏗️  Building {args.model.upper()} model...")
-    model = get_model(args.model, args.hidden_dim, args.dropout)
+    model = get_model(args.model, args.hidden_dim, args.dropout, 
+                      num_classes=num_classes, input_dim=input_dim)
     model = model.to(device)
     
     num_params = model.count_parameters()

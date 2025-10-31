@@ -1,0 +1,27 @@
+{
+  "model": "transformer",
+  "hyperparameters": {
+    "model": "transformer",
+    "data_path": "data/processed/dataset_raw_binary.npz",
+    "checkpoint_dir": "checkpoints_transformer_raw",
+    "hidden_dim": 256,
+    "dropout": 0.1,
+    "batch_size": 32,
+    "epochs": 30,
+    "lr": 0.001,
+    "gamma": 1.5,
+    "patience": 15,
+    "device": "cuda"
+  },
+  "num_parameters": 3200134,
+  "best_val_acc": 0.7311939268461007,
+  "test_acc": 0.7244137931034482,
+  "test_f1": 0.14003092838479178,
+  "per_class_f1": {
+    "t1_cook": 0.8401855703087506,
+    "t2_handwash": 0.0,
+    "t3_sleep": 0.0,
+    "t4_medicine": 0.0,
+    "t5_eat": 0.0
+  }
+}

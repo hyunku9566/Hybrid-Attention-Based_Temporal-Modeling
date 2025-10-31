@@ -1,0 +1,27 @@
+{
+  "model": "baseline",
+  "hyperparameters": {
+    "model": "baseline",
+    "data_path": "data/processed/T_variants/dataset_T50.npz",
+    "checkpoint_dir": "checkpoints_baseline_T50",
+    "hidden_dim": 256,
+    "dropout": 0.1,
+    "batch_size": 32,
+    "epochs": 50,
+    "lr": 0.0003,
+    "gamma": 1.5,
+    "patience": 15,
+    "device": "cuda"
+  },
+  "num_parameters": 2264326,
+  "best_val_acc": 0.7858407079646018,
+  "test_acc": 0.7977369165487977,
+  "test_f1": 0.7585427369490491,
+  "per_class_f1": {
+    "t1_cook": 0.7539936102236422,
+    "t2_handwash": 0.6296296296296297,
+    "t3_sleep": 0.9560336763330215,
+    "t4_medicine": 0.7030567685589519,
+    "t5_eat": 0.75
+  }
+}

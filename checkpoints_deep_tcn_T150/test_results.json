@@ -1,0 +1,27 @@
+{
+  "model": "deep_tcn",
+  "hyperparameters": {
+    "model": "deep_tcn",
+    "data_path": "data/processed/T_variants/dataset_T150.npz",
+    "checkpoint_dir": "checkpoints_deep_tcn_T150",
+    "hidden_dim": 256,
+    "dropout": 0.1,
+    "batch_size": 32,
+    "epochs": 50,
+    "lr": 0.0003,
+    "gamma": 1.5,
+    "patience": 15,
+    "device": "cuda"
+  },
+  "num_parameters": 2433541,
+  "best_val_acc": 0.9486725663716814,
+  "test_acc": 0.9490806223479491,
+  "test_f1": 0.936196425913101,
+  "per_class_f1": {
+    "t1_cook": 0.8724035608308606,
+    "t2_handwash": 0.9777777777777777,
+    "t3_sleep": 0.9917203311867525,
+    "t4_medicine": 0.896551724137931,
+    "t5_eat": 0.9425287356321839
+  }
+}

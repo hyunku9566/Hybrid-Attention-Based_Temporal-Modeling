@@ -1,0 +1,27 @@
+{
+  "model": "conformer",
+  "hyperparameters": {
+    "model": "conformer",
+    "data_path": "data/processed/T_variants/dataset_T50.npz",
+    "checkpoint_dir": "checkpoints_conformer_T50",
+    "hidden_dim": 256,
+    "dropout": 0.1,
+    "batch_size": 32,
+    "epochs": 50,
+    "lr": 0.0003,
+    "gamma": 1.5,
+    "patience": 15,
+    "device": "cuda"
+  },
+  "num_parameters": 6154757,
+  "best_val_acc": 0.7460176991150442,
+  "test_acc": 0.7623762376237624,
+  "test_f1": 0.7144939690152416,
+  "per_class_f1": {
+    "t1_cook": 0.7588235294117647,
+    "t2_handwash": 0.5669014084507042,
+    "t3_sleep": 0.9473684210526315,
+    "t4_medicine": 0.6651053864168618,
+    "t5_eat": 0.6342710997442456
+  }
+}
